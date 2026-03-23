@@ -3,6 +3,7 @@ use actix_web::{App, HttpServer};
 use crate::db::db;
 
 mod db;
+mod models;
 
 #[actix_web::main]
 async fn main ()->std::io::Result<()>{
