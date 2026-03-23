@@ -30,3 +30,4 @@ next-env.d.ts
 
 #this is the backend files exist
 backend/target
+backend/.env
