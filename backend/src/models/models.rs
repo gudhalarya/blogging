@@ -11,10 +11,16 @@ pub struct Post{
 }
 
 #[derive(Debug,Deserialize,Serialize)]
-pub struct User{
+pub struct Sign_up{
     pub name:String,
     pub email:String,
     pub password:String,
     pub confirm_password:String,
 }
 
+
+#[derive(Debug,Deserialize,Serialize)]
+pub struct Sign_in{
+    pub email:String,
+    pub password:String,
+}
