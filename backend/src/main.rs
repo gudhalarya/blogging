@@ -4,6 +4,9 @@ use crate::db::db;
 
 mod db;
 mod models;
+mod routes;
+mod helper;
+
 
 #[actix_web::main]
 async fn main ()->std::io::Result<()>{
