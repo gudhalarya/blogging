@@ -1,9 +1,10 @@
-use actix_web::{HttpResponse, Responder, web};
+use actix_web::{HttpResponse, Responder, post, web};
 use argon2::{Argon2, PasswordVerifier};
 use sqlx::{PgPool, Row};
 
 use crate::{helper::{generate_jwt, hash_password, verify_password}, models::models::{Sign_in, Sign_up}};
 
+#[post("/sign_up")]
 pub async fn sign_up(pool:web::Data<PgPool>,user:web::Json<Sign_up>)->impl Responder{
     let check = sqlx::query("SELECT 1 FROM users WHERE email = $1").bind(&user.email).fetch_optional(pool.get_ref()).await;
    if let Err(_)= check{
@@ -22,6 +23,7 @@ pub async fn sign_up(pool:web::Data<PgPool>,user:web::Json<Sign_up>)->impl Respo
    }
 }
 
+#[post("/sign_in")]
 pub async fn sign_in(pool:web::Data<PgPool>,user:web::Json<Sign_in>)->impl Responder{
     let result = sqlx::query("SELECT id,password FROM users WHERE email = $1").bind(&user.email).fetch_optional(pool.get_ref()).await;
     let user_record = match result{
