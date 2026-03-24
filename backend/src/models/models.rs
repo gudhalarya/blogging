@@ -24,3 +24,9 @@ pub struct Sign_in{
     pub email:String,
     pub password:String,
 }
+
+#[derive(Debug,Deserialize,Serialize)]
+pub struct Claims {
+    pub sub:i32,
+    pub exp:usize,
+}

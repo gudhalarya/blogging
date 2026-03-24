@@ -2,7 +2,7 @@ use actix_web::{HttpResponse, Responder, web};
 use argon2::{Argon2, PasswordVerifier};
 use sqlx::{PgPool, Row};
 
-use crate::{helper::{hash_password, verify_password}, models::models::{Sign_in, Sign_up}};
+use crate::{helper::{generate_jwt, hash_password, verify_password}, models::models::{Sign_in, Sign_up}};
 
 pub async fn sign_up(pool:web::Data<PgPool>,user:web::Json<Sign_up>)->impl Responder{
     let check = sqlx::query("SELECT 1 FROM users WHERE email = $1").bind(&user.email).fetch_optional(pool.get_ref()).await;
@@ -30,6 +30,7 @@ pub async fn sign_in(pool:web::Data<PgPool>,user:web::Json<Sign_in>)->impl Respo
         Err(_)=>return HttpResponse::InternalServerError().body("Some db error ")
     };
 
+    let user_id :i32 = user_record.get("id");
     let password:String = user_record.get("password");
 
     let is_valid = verify_password(&user.password, &password);
@@ -38,5 +39,11 @@ pub async fn sign_in(pool:web::Data<PgPool>,user:web::Json<Sign_in>)->impl Respo
         return HttpResponse::Unauthorized().body("Wrong email or password");
     }
 
-    HttpResponse::Ok().body("User sign in successfull")
+    let token = generate_jwt(user_id);
+    HttpResponse::Ok().json(serde_json::json!({
+        "message":"User sign in successfull",
+        "token":token
+    }))
 }
+
+
