@@ -6,7 +6,7 @@ mod db;
 mod models;
 mod routes;
 mod helper;
-
+mod auth;
 
 #[actix_web::main]
 async fn main ()->std::io::Result<()>{
